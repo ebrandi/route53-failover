@@ -58,14 +58,22 @@ touch $script_path/ips.tmp
 
 # Connect to webserver and search for a specific string to
 # check if webserver are up and running for each address 
-# listed in ips.master file 
+# listed in ips.master file. Than print multiple lines
+# for each IP address based in fixed weight seted in ips.master
 
-for i in `cat $script_path/ips.master`
+for i in `cat $script_path/ips.master | grep -v "#"`
 do
-  condition=`lynx -connect_timeout=1 -dump http://$i/$test_file 2>&1 | grep "$test_string" | wc -l | cut -d ' ' -f 8`
+  ip=`echo $i | awk -F":" '{print $2}'`
+  condition=`lynx -connect_timeout=1 -dump http://$ip/$test_file 2>&1 | grep "$test_string" | wc -l | cut -d ' ' -f 8`
   if [ "$condition" -eq "1" ]
   then
-     echo $i >> $script_path/ips.tmp
+     peso=`echo $i | awk -F":" '{print $1}'`
+     counter=1
+     while [ $counter -le $peso ]
+       do
+         echo $ip >> $script_path/ips.tmp
+         counter=$(( $counter + 1 ))
+       done
   fi
 done
 
