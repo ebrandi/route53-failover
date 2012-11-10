@@ -35,7 +35,7 @@ AccesskeyID=
 SecretAPIKey=
 fail_host=www.fug.com.br.
 script_path=/usr/local/route53-failover
-test_file=r7status
+test_file=status
 test_string="Error 200 OK"
 
 ###############################################################
